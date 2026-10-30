@@ -1,13 +1,21 @@
 # Intune-RSOP
-A practice script to implement what I learned at MMSMOA2025
+Resultant Set of Policy (RSOP) for Microsoft Intune: a PowerShell script that lists every Intune setting applied to a Windows device, which policy sets it, and whether it really took effect on the endpoint.
 
-Comes with a 100% Worked on My Machine Guarantee. Open to suggestions on how I have make this easier for other people to run- Usually I'm just sharing these with my future self. 
+Group Policy has `gpresult`. Intune doesn't. When a setting misbehaves on one computer, this answers "which Intune policy is doing this?" without clicking through every profile in the admin center.
+
+A practice script to implement what I learned at MMSMOA2025. Comes with a 100% Worked on My Machine Guarantee. Open to suggestions on how I have make this easier for other people to run- Usually I'm just sharing these with my future self. 
 
 ## What it does
 
-`Get-IntuneRSOP.ps1` lists every configuration setting Intune reports for a device, the policy that sets it, and whether it applied. For Settings Catalog policies it also shows the configured value, the policy priority, and the CSP path the setting writes to on the device.
+`Get-IntuneRSOP.ps1` uses the Microsoft Graph API to list every configuration setting Intune reports for a device, the policy that sets it, and whether it applied (succeeded, error or conflict). It covers Settings Catalog policies, device configuration profiles, Administrative Templates (ADMX) and endpoint security policies. For Settings Catalog policies it also shows the configured value, the policy priority, and the CSP path the setting writes to on the device.
 
-`Test-IntuneRSOPOnDevice.ps1` runs on the endpoint and checks those settings are actually in effect there.
+`Test-IntuneRSOPOnDevice.ps1` runs on the endpoint and checks those settings are actually in effect, by comparing them with the MDM policy values Windows records in the registry (PolicyManager). It can also run as an Intune Remediations detection script.
+
+## Why
+
+- Find which Intune policy is causing an issue on a specific device
+- Troubleshoot Intune policy conflicts and settings that show "Succeeded" but don't seem to work
+- Audit the effective Intune configuration of a device, like `gpresult /h` for MDM
 
 ## Requirements
 
